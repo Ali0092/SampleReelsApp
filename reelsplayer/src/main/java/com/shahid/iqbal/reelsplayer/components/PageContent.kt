@@ -44,8 +44,6 @@ fun PageContent(
         mutableStateOf(false)
     }
 
-
-
     Box(
         modifier = modifier
             .fillMaxSize()

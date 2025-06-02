@@ -74,6 +74,8 @@ fun ReelsPlayer(
 
     val cacheReel = remember { CacheInstance.cachingWorkFactory(context) }
 
+    //starting from here
+
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             videoScalingMode = ReelsConfigUtils.getVideoScalingMode(reelConfig.videoScalingMode)
