@@ -1,11 +1,8 @@
 package com.gulehri.samplereelsapp
 
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import com.shahid.iqbal.reelsplayer.actions.VideoSource
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class MainVm : ViewModel() {
 
@@ -14,7 +11,6 @@ class MainVm : ViewModel() {
     var indexOfVideo = MutableStateFlow(0)
 
     var currentPage = MutableStateFlow<Int>(indexOfVideo.value)
-
 
     val videoList = listOf(
         VideoSource.UrlResource("https://vue-3-tiktok.vercel.app/video1.mp4"),

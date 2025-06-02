@@ -23,10 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -38,7 +35,6 @@ import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.gulehri.samplereelsapp.ui.theme.SampleReelsAppTheme
-import com.shahid.iqbal.reelsplayer.actions.VideoSource
 import com.shahid.iqbal.reelsplayer.components.ReelsPlayer
 import com.shahid.iqbal.reelsplayer.configs.ReelsConfig
 
@@ -55,7 +51,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SampleReelsAppTheme {
-
 
                 val showScreen by mainVm.showScreen.collectAsStateWithLifecycle()
                 val indexOfVideo by mainVm.indexOfVideo.collectAsStateWithLifecycle()
@@ -91,14 +86,12 @@ class MainActivity : ComponentActivity() {
                     contentPadding = PaddingValues(10.dp)
                 ) {
 
-
                     items(mainVm.videoList) {
                         SingleTrendingItem(url = it.videoUrl) {
                             mainVm.showScreen.value = 1
                             mainVm.indexOfVideo.value = mainVm.videoList.indexOf(it)
                         }
                     }
-
 
                 }
             }
@@ -111,8 +104,9 @@ class MainActivity : ComponentActivity() {
 
         val context = LocalContext.current
         val model = remember { ImageRequest.Builder(context).data(url).crossfade(true).build() }
-        val imageLoader = remember { ImageLoader.Builder(context).components { add(VideoFrameDecoder.Factory()) }.build() }
-
+        val imageLoader = remember {
+            ImageLoader.Builder(context).components { add(VideoFrameDecoder.Factory()) }.build()
+        }
 
         AsyncImage(
             model = model,
@@ -123,17 +117,14 @@ class MainActivity : ComponentActivity() {
                 .clickable { onClick() }
                 .fillMaxWidth()
                 .height(220.dp)
-                .clip(RoundedCornerShape(10.dp))
-        )
+                .clip(RoundedCornerShape(10.dp)))
     }
-
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun ReelsDetail(indexOfVideo: Int) {
 
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
 
             BackHandler {
                 mainVm.showScreen.value = 0
@@ -154,7 +145,6 @@ class MainActivity : ComponentActivity() {
 
                     mainVm.currentPage.value = page
                 }
-
 
             }
         }

@@ -58,23 +58,21 @@ fun ReelsPlayer(
     indexOfVideo: Int = 0,
     pageSpacing: Dp = 0.dp,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    currentPage: (Int) -> Unit,
-
+    currentPage: (Int) -> Unit
     ) {
+
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val playerViewModel: PlayerViewModel = viewModel()
     val playerUiState by playerViewModel.playerUiState.collectAsStateWithLifecycle()
 
+    val listOfVideos = remember { videoList }                   //TODO: remove this
+    val index by remember { mutableIntStateOf(indexOfVideo) }   //TODO: remove this
 
-    val listOfVideos = remember { videoList }
-    val index by remember { mutableIntStateOf(indexOfVideo) }
-    val pageState = rememberPagerState(initialPage = index) { listOfVideos.size }
+    val pageState = rememberPagerState(initialPage = indexOfVideo) { videoList.size }
 
     val cacheReel = remember { CacheInstance.cachingWorkFactory(context) }
-
-    //starting from here
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {

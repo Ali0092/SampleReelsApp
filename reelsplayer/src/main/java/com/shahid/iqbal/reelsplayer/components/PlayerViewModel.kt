@@ -17,7 +17,6 @@ class PlayerViewModel : ViewModel() {
     val playerUiState get() = _playerUiState.asStateFlow()
 
 
-
     fun updatePauseState(pause: Boolean) {
         viewModelScope.launch { _playerUiState.update { it.copy(isPaused = pause) } }
     }

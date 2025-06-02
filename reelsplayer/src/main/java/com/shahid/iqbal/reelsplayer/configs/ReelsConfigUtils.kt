@@ -85,9 +85,9 @@ object ReelsConfigUtils {
             ViewGroup.LayoutParams(reelConfig.playerSize.width, reelConfig.playerSize.height)
         resizeMode = getResizeMode(reelConfig.playerResizeMode)
         artworkDisplayMode = getThumbnailDisplayMode(reelConfig.thumbnailDisplayMode)
-        setControllerAnimationEnabled(true)
+        setControllerAnimationEnabled(false)
 
-        hideControllersViews()
+//        hideControllersViews()
     }
 
 }

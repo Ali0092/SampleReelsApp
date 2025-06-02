@@ -56,18 +56,18 @@ fun PageContent(
                 PlayerView(ctx).apply {
                     player = exoPlayer
                     setPlayerAttributes(reelConfig)
-                    useController = true
-                    controllerAutoShow = false
-                    controllerHideOnTouch = false
-                    hideController()
-
-                    setOnClickListener {
-                        showControlsMenu = !showControlsMenu
-
-                        if (showControlsMenu)
-                            showController()
-                        else hideController()
-                    }
+                    useController = false
+//                    controllerAutoShow = false
+//                    controllerHideOnTouch = false
+//                    hideController()
+//
+//                    setOnClickListener {
+//                        showControlsMenu = !showControlsMenu
+//
+//                        if (showControlsMenu)
+//                            showController()
+//                        else hideController()
+//                    }
                 }
             }, modifier = Modifier
                 .fillMaxSize(), update = {
