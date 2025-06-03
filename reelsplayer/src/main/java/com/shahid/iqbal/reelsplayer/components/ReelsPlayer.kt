@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -67,9 +68,6 @@ fun ReelsPlayer(
     val playerViewModel: PlayerViewModel = viewModel()
     val playerUiState by playerViewModel.playerUiState.collectAsStateWithLifecycle()
 
-    val listOfVideos = remember { videoList }                   //TODO: remove this
-    val index by remember { mutableIntStateOf(indexOfVideo) }   //TODO: remove this
-
     val pageState = rememberPagerState(initialPage = indexOfVideo) { videoList.size }
 
     val cacheReel = remember { CacheInstance.cachingWorkFactory(context) }
@@ -118,7 +116,6 @@ fun ReelsPlayer(
     }
 
 
-
     LaunchedEffect(
         key1 = playerUiState.isPaused, key2 = !playerUiState.isPaused
     ) {
@@ -142,7 +139,6 @@ fun ReelsPlayer(
     }
 
 
-
     DisposableEffect(key1 = Unit) {
         onDispose { exoPlayer.release() }
     }
@@ -153,7 +149,6 @@ fun ReelsPlayer(
             lifecycleOwner.lifecycle.removeObserver(lifecycleEventObserver)
         }
     }
-
 
     VerticalPager(state = pageState,
         modifier = modifier,
@@ -167,7 +162,8 @@ fun ReelsPlayer(
             page = page,
             pagerState = pageState,
             reelConfig = reelConfig,
-            isPlayerLoading = playerUiState.isLoading
+            isPlayerLoading = playerUiState.isLoading,
+            thumbnailUrl = videoList[page].toString()
         )
     }
 }

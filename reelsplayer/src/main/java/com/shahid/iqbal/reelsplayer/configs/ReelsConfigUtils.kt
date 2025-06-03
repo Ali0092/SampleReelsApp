@@ -87,7 +87,7 @@ object ReelsConfigUtils {
         artworkDisplayMode = getThumbnailDisplayMode(reelConfig.thumbnailDisplayMode)
         setControllerAnimationEnabled(false)
 
-//        hideControllersViews()
+        hideControllersViews()
     }
 
 }

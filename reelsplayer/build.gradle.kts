@@ -65,6 +65,10 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer-hls:1.4.1")
 
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.video.compose)
+
+
 }
 
 publishing {

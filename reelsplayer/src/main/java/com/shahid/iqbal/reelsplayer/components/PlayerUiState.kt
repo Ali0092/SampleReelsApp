@@ -14,6 +14,6 @@ import androidx.annotation.Keep
  */
 @Keep
 data class PlayerUiState(
-    var isLoading: Boolean = false,
+    var isLoading: Boolean = true,
     var isPaused: Boolean = false,
 )
