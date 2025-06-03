@@ -1,7 +1,9 @@
 package com.shahid.iqbal.reelsplayer.components
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.shahid.iqbal.reelsplayer.actions.VideoSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -35,6 +39,7 @@ import kotlinx.coroutines.withContext
  * @param modifier A [Modifier] to apply to this layout.
  * @param progressColor The color of the progress indicator.
  * @param strokeWidth The width of the stroke for the progress indicator.
+ * @param thumbnail Bitmap of video thumbnail
  */
 
 @Composable
@@ -42,28 +47,17 @@ fun DefaultVideoLoader(
     modifier: Modifier = Modifier,
     progressColor: Color = Color.White,
     strokeWidth: Dp = 5.dp,
-    videoUrl: String? = null
+    thumbnail: Bitmap? = null
 ) {
-    Log.d("checkingThumbnails", "DefaultVideoLoader: ${videoUrl}")
-
-    var thumbnail by remember(videoUrl) { mutableStateOf<Bitmap?>(null) }
-
-    LaunchedEffect(Unit){
-        if (videoUrl!!.isNotEmpty()) {
-            thumbnail= getVideoThumbnail(videoUrl)
-            Log.d("checkingThumbnails", "extractVideoThumbnail: ${getVideoThumbnail(videoUrl)}")
-        }
-    }
-
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         AsyncImage(
+            modifier = modifier,
             model = thumbnail,
             contentDescription = "Video thumbnail",
-            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
         CircularProgressIndicator(
-            modifier = modifier
+            modifier = Modifier
                 .align(alignment = Alignment.Center)
                 .size(50.dp),
             color = progressColor,
@@ -72,26 +66,5 @@ fun DefaultVideoLoader(
         )
     }
 
-
 }
 
-
-suspend fun getVideoThumbnail(url: String): Bitmap? = withContext(Dispatchers.IO) {
-    try {
-        Log.d("checkingThumbnails", "getVideoThumbnail: trying")
-
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(url, HashMap()) // Needed for network URL
-        val bitmap = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST) // 1 second
-        retriever.release()
-        Log.d("checkingThumbnails", "getVideoThumbnail: ${bitmap}")
-
-        bitmap
-
-    } catch (e: Exception) {
-        Log.d("checkingThumbnails", "getVideoThumbnail: catching")
-
-        e.printStackTrace()
-        null
-    }
-}

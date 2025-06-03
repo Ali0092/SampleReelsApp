@@ -163,7 +163,7 @@ fun ReelsPlayer(
             pagerState = pageState,
             reelConfig = reelConfig,
             isPlayerLoading = playerUiState.isLoading,
-            thumbnailUrl = videoList[page].toString()
+            videoSource = videoList[page]
         )
     }
 }

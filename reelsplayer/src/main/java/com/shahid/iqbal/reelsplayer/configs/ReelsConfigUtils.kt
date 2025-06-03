@@ -1,8 +1,9 @@
 package com.shahid.iqbal.reelsplayer.configs
 
 import android.content.Context
-import android.os.Environment
-import android.os.StatFs
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -11,21 +12,15 @@ import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.util.RepeatModeUtil
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.database.StandaloneDatabaseProvider
-import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
-import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.shahid.iqbal.reelsplayer.actions.PlayerResizeMode
 import com.shahid.iqbal.reelsplayer.actions.RepeatMode
 import com.shahid.iqbal.reelsplayer.actions.ThumbnailDisplayMode
 import com.shahid.iqbal.reelsplayer.actions.VideoScalingMode
-import kotlinx.coroutines.CoroutineScope
+import com.shahid.iqbal.reelsplayer.actions.VideoSource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
+import kotlinx.coroutines.withContext
 
 /*
  * Created by Shahid Iqbal on 7/20/2024.
@@ -88,6 +83,48 @@ object ReelsConfigUtils {
         setControllerAnimationEnabled(false)
 
         hideControllersViews()
+    }
+
+    /*
+    * This function will get the video thumbnail and return as a bitmap
+    * if its successful in retrieving it.
+    */
+
+    suspend fun getVideoThumbnail(context: Context, source: VideoSource): Bitmap? =
+        withContext(Dispatchers.IO) {
+            try {
+                val retriever = MediaMetadataRetriever()
+
+                when (source) {
+                    is VideoSource.UrlResource -> {
+                        retriever.setDataSource(source.videoUrl, HashMap()) // Network
+                    }
+
+                    is VideoSource.RawResource -> {
+                        val uri =
+                            Uri.parse("android.resource://${context.packageName}/${source.resourceId}")
+                        retriever.setDataSource(context, uri)
+                    }
+
+                    is VideoSource.AssetResource -> {
+                        val afd = context.assets.openFd(source.assetPath)
+                        retriever.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                        afd.close()
+                    }
+
+                    is VideoSource.HlsResource -> {
+                        // Might fail — HLS (m3u8) is not always supported
+                        retriever.setDataSource(source.streamingUrl, HashMap())
+                    }
+                }
+
+                val frame = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
+                retriever.release()
+                frame
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
     }
 
 }
